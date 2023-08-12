@@ -1,4 +1,5 @@
-from flask import Flask, redirect, render_template
+import datetime
+from flask import Flask, redirect, render_template, request
 import data_models
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -13,13 +14,31 @@ data_models.db.init_app(app)
 
 
 @app.route("/", methods=["GET"])
-def index():
+def index_get():
     return redirect("/add_author")
 
 
-@app.route("/add_author")
-def add_author():
+@app.route("/add_author", methods=["GET"])
+def add_author_get():
     return render_template("add_author.html")
+
+
+@app.route("/add_author", methods=["POST"])
+def add_author_post():
+
+    name = request.form['name']
+    birthdate = datetime.date.fromisoformat(request.form['birthdate'])
+    date_of_death = datetime.date.fromisoformat(request.form['date_of_death'])
+
+    try:
+        new_author = data_models.Author(
+            name=name, birth_date=birthdate, date_of_death=date_of_death)
+        data_models.db.session.add(new_author)
+        data_models.db.session.commit()
+    except Exception as ex:
+        return render_template("add_author.html", message="Can't add this Author!")
+
+    return render_template("add_author.html", message="Author added!")
 
 
 if __name__ == "__main__":
