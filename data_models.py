@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
@@ -25,7 +26,8 @@ class Book(db.Model):
     isbn = db.Column(db.String(20), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     publication_year = db.Column(db.Integer, nullable=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('author.id'), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey(
+        'author.id'), nullable=False)
 
     author = db.relationship('Author', backref=db.backref('books', lazy=True))
 
@@ -41,5 +43,3 @@ class Book(db.Model):
 
     def __str__(self):
         return f"Book: {self.title}, ISBN: {self.isbn}"
-
-

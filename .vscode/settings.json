@@ -1,0 +1,9 @@
+{
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "modificationsIfAvailable"
+    }
+}
