@@ -54,19 +54,20 @@ def add_book_get():
 @app.route("/add_book", methods=["POST"])
 def add_book_post():
 
-    name = request.form['name']
-    birthdate = datetime.date.fromisoformat(request.form['birthdate'])
-    date_of_death = datetime.date.fromisoformat(request.form['date_of_death'])
+    isbn = request.form['isbn']
+    title = request.form['title']
+    publication_year = int(request.form['publication_year'])
+    author_id = request.form['author_id']
 
     try:
-        new_author = data_models.Author(
-            name=name, birth_date=birthdate, date_of_death=date_of_death)
-        data_models.db.session.add(new_author)
+        new_book = data_models.Book(
+            isbn=isbn, title=title, publication_year=publication_year, author_id=author_id)
+        data_models.db.session.add(new_book)
         data_models.db.session.commit()
     except Exception as ex:
-        return render_template("add_author.html", message="Can't add this Author!")
+        return render_template("add_book.html", message="Can't add this Book!")
 
-    return render_template("add_author.html", message="Author added!")
+    return render_template("add_book.html", message="Book added!")
 
 
 if __name__ == "__main__":
