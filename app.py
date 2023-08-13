@@ -21,6 +21,40 @@ def home_page():
         return render_template("home.html", books=books)
     except Exception as ex:
         return render_template("home.html", message="Cannot load books at this time!")
+    
+
+@app.route("/search_books", methods=["GET"])
+def search_books():
+    search_query = request.args.get("search_query")
+    if search_query:
+        books = data_models.Book.query.filter(
+            (data_models.Book.title.ilike(f"%{search_query}%")) |
+            (data_models.Book.isbn.ilike(f"%{search_query}%")) |
+            (data_models.Author.name.ilike(f"%{search_query}%"))
+        ).all()
+        if books:
+            return render_template("home.html", books=books)
+        else:
+            return render_template("home.html", message="No books found that match the search criteria.")
+    else:
+        return redirect("/")
+
+    
+
+@app.route("/sort_books", methods=["GET"])
+def sort_books():
+    sort_option = request.args.get("sort_option")
+    if sort_option == "title":
+        books = data_models.Book.query.order_by(data_models.Book.title).all()
+    elif sort_option == "author":
+        books = data_models.Book.query.join(data_models.Author).order_by(data_models.Author.name, data_models.Book.title).all()
+    elif sort_option == "publication_year":
+        books = data_models.Book.query.order_by(data_models.Book.publication_year, data_models.Book.title).all()
+    else:
+        books = data_models.Book.query.all()
+
+    return render_template("home.html", books=books)
+
 
 
 @app.route("/", methods=["GET"])
