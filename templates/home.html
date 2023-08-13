@@ -6,11 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
   </head>
   <body>
+    <h1>Your Book Library!</h1>
+    <a href="/add_author"><button>Add Author</button></a>
+    <a href="/add_book"><button>Add Book</button></a>
+
     <form method="GET" action="/search_books">
       <label for="search_query">Search Books:</label>
       <input type="text" id="search_query" name="search_query" required>
       <button type="submit">Search</button>
   </form>
+
+  {% if message %}
+  <p>{{ message }}</p>
+  {% endif %}
 
     <form method="GET" action="/sort_books">
       <label for="sort_option">Sort by:</label>
