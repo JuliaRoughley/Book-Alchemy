@@ -13,9 +13,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + \
 data_models.db.init_app(app)
 
 
+@app.route("/home", methods=["GET"])
+def home_page():
+    try:
+        session = data_models.db.session
+        books = session.query(data_models.Book).join(data_models.Author).all()
+        return render_template("home.html", books=books)
+    except Exception as ex:
+        return render_template("home.html", message="Cannot load books at this time!")
+
+
 @app.route("/", methods=["GET"])
 def index_get():
-    return redirect("/add_author")
+    return redirect("/home")
 
 
 @app.route("/add_author", methods=["GET"])
@@ -48,7 +58,6 @@ def add_book_get():
         return render_template("add_book.html", authors=authors)
     except Exception as ex:
         return render_template("add_book.html", message="Cannot load authors at this time!")
-
 
 
 @app.route("/add_book", methods=["POST"])

@@ -8,7 +8,8 @@
   <body>
 
     {% for book in books %}
-    <div> <h3>{{ book.title }}</h3>
+    <div> <h3>{{ book.title }}, {{ book.author.name }},</h3>
+      <img src="{{book.img_url()}}">
     </div>
     {% endfor %}
 

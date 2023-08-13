@@ -43,3 +43,8 @@ class Book(db.Model):
 
     def __str__(self):
         return f"Book: {self.title}, ISBN: {self.isbn}"
+    
+    def img_url(self):
+        API_address = "https://covers.openlibrary.org/b/"
+        uri = f'{API_address}isbn/{self.isbn}-S.jpg'
+        return uri
