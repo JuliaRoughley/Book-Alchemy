@@ -1,5 +1,5 @@
 import datetime
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, url_for
 import data_models
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -18,7 +18,8 @@ def home_page():
     try:
         session = data_models.db.session
         books = session.query(data_models.Book).join(data_models.Author).all()
-        return render_template("home.html", books=books)
+        message = request.args.get("message")
+        return render_template("home.html", books=books, message=message)
     except Exception as ex:
         return render_template("home.html", message="Cannot load books at this time!")
     
@@ -60,6 +61,18 @@ def sort_books():
 @app.route("/", methods=["GET"])
 def index_get():
     return redirect("/home")
+
+
+@app.route("/book/<int:book_id>/delete", methods=["GET", "POST"])
+def delete_book(book_id):
+    book = data_models.Book.query.get(book_id)
+    if book:
+        data_models.db.session.delete(book)
+        data_models.db.session.commit()
+        return redirect(url_for("home_page", message="Book deleted successfully."))
+    else:
+        return redirect(url_for("home_page", message="Book not found."))
+
 
 
 @app.route("/add_author", methods=["GET"])
